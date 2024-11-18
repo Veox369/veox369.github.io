@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSW</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #1e222d;
+            color: #ffffff;
+        }
+        .search-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-box {
+            width: 100%;
+            padding: 10px 40px 10px 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #333;
+            color: #fff;
+        }
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            font-size: 20px;
+            color: #bbb;
+        }
+        .tradingview-widget-container {
+            width: 100%;
+            height: 60vh;
+            border: none;
+            position: relative;
+        }
+        .tradingview-widget-container__widget {
+            border: none;
+        }
+        .blue-text {
+            color: #1f78ff;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .search-container {
+                max-width: 90%;
+            }
+            .search-box {
+                padding: 10px 40px 10px 10px;
+            }
+            .tradingview-widget-container {
+                height: 50vh;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .search-icon {
+                font-size: 16px;
+            }
+            .search-box {
+                padding: 8px 32px 8px 8px;
+            }
+            .tradingview-widget-container {
+                height: 40vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <input type="text" class="search-box" id="searchBox" placeholder="Search for a currency...">
+        <i class="fas fa-search search-icon"></i>
+    </div>
+    <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js" async>
+        {
+        "interval": "1m",
+        "width": "100%",
+        "isTransparent": false,
+        "height": "100%",
+        "symbol": "BINANCE:BTCUSDT",
+        "showIntervalTabs": true,
+        "displayMode": "multiple",
+        "locale": "en",
+        "colorTheme": "dark"
+        }
+        </script>
+    </div>
+
+    <script>
+        document.getElementById('searchBox').addEventListener('input', function(e) {
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js';
+            script.async = true;
+            var symbol = e.target.value.toUpperCase();
+            var config = {
+                "interval": "1m",
+                "width": "100%",
+                "isTransparent": false,
+                "height": "100%",
+                "symbol": symbol,
+                "showIntervalTabs": true,
+                "displayMode": "multiple",
+                "locale": "en",
+                "colorTheme": "dark"
+            };
+            script.innerHTML = JSON.stringify(config);
+            var container = document.querySelector('.tradingview-widget-container');
+            container.innerHTML = '';
+            container.appendChild(script);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length) {
+                        mutation.addedNodes.forEach(function(node) {
+                            if (node.nodeType === 1 && node.classList.contains('tradingview-widget-container__widget')) {
+                                var link = document.createElement('link');
+                                link.rel = 'stylesheet';
+                                link.href = '40142.4ca2690b005002dcbdb5.css';
+                                document.head.appendChild(link);
+
+                                var style = document.createElement('style');
+                                style.innerHTML = `
+                                    .label-dzbd7lyV {
+                                        border-radius: 12px;
+                                        box-sizing: border-box;
+                                        color: #fff;
+                                        display: flex;
+                                        height: 24px;
+                                        max-width: 28px;
+                                        overflow: hidden;
+                                        padding: 0 6px;
+                                        position: absolute;
+                                        transition: max-width .6s cubic-bezier(.4,.01,.22,1) 0s, background .3s cubic-bezier(.4,.01,.22,1) 0s;
+                                        z-index: 3;
+                                        display: none;
+                                    }
+                                `;
+                                document.head.appendChild(style);
+                            }
+                        });
+                    }
+                });
+            });
+
+            var config = { childList: true, subtree: true };
+            observer.observe(document.body, config);
+        });
+    </script>
+</body>
+</html>
