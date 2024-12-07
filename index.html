@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>VEOX</h1>
+    <select id="api-select">
+      <option value="https://api-inference.huggingface.co/models/strangerzonehf/Flux-Midjourney-Mix2-LoRA" selected>FXM</option>
+      <option value="https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-dev">FL</option>
+      <option value="https://api-inference.huggingface.co/models/Jovie/Midjourney">MI</option>
+      <option value="https://api-inference.huggingface.co/models/XLabs-AI/flux-RealismLora">RL</option>
+      <option value="https://api-inference.huggingface.co/models/seawolf2357/ntower">NT</option>
+      <option value="https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3.5-large">SD</option>
+      <option value="https://api-inference.huggingface.co/models/strangerzonehf/Flux-Icon-Kit-LoRA">FIKL</option>
+      <option value="https://api-inference.huggingface.co/models/strangerzonehf/Flux-Super-Realism-LoRA">FSRL</option>
+      <option value="https://api-inference.huggingface.co/models/strangerzonehf/Flux-3DXL-Partfile-0006">F3DXL</option>
+      <option value="https://api-inference.huggingface.co/models/strangerzonehf/Flux-Ultimate-LoRA-Collection">FULC</option>
+      <option value="https://api-inference.huggingface.co/models/Shakker-Labs/FLUX.1-dev-LoRA-Logo-Design">FLD</option>
+      <option value="https://api-inference.huggingface.co/models/prithivMLmods/Canopus-LoRA-Flux-UltraRealism-2.0">CLFU</option>
+      <option value="https://api-inference.huggingface.co/models/glif-loradex-trainer/saq1b_halftone">SH</option>
+      <option value="https://api-inference.huggingface.co/models/strangerzonehf/Flux-NTFv4-Designs-LoRA">FNDL</option>
+      <option value="https://api-inference.huggingface.co/models/strangerzonehf/Flux-Super-Portrait-LoRA">FSPL</option>
+      <option value="https://api-inference.huggingface.co/models/strangerzonehf/Flux-Creative-Stocks-LoRA">FCSL</option>
+      <option value="https://api-inference.huggingface.co/models/prithivMLmods/Berenices-Alpha-DW-LoRA">BADWL</option>
+      <option value="https://api-inference.huggingface.co/models/Keltezaa/Prof_Nude_photography_v3_flux">PNPF - NFSW</option>
+      <option value="https://api-inference.huggingface.co/models/Keltezaa/flux_pussy_NSFW">FP - NFSW</option>
+    </select>
+    <input type="text" id="prompt" placeholder="Enter your prompt...">
+    <button id="generate-btn">
+      <i class="fas fa-magic"></i> Generate
+    </button>
+    <div id="output"></div>
+    <div id="error-box"></div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
