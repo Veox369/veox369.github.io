@@ -34,7 +34,7 @@ input[type="text"] {
     background-color: #ffffff;
     color: #262626;
     box-sizing: border-box;
-    font-family: 'Jaro', sans-serif;
+    font-family: 'Quicksand', sans-serif;
 }
 
 input[type="text"]:focus {
@@ -57,7 +57,7 @@ button {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    font-family: 'Jaro', sans-serif;
+    font-family: 'Quicksand', sans-serif;
 }
 
 button i {
@@ -116,7 +116,7 @@ img {
     justify-content: center;
     gap: 10px;
     text-decoration: none;
-    font-family: 'Jaro', sans-serif;
+    font-family: 'Quicksand', sans-serif;
 }
 
 #download-btn i {
