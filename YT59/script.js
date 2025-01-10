@@ -19,7 +19,6 @@ function embedVideo() {
     
     let videoUrl = linkInput.value;
     
-    // Extract video ID from different types of YouTube URLs
     let videoId = '';
     const urlPattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
     const match = videoUrl.match(urlPattern);
@@ -28,7 +27,7 @@ function embedVideo() {
         videoId = match[1];
         const embedUrl = `https://www.youtube.com/embed/${videoId}`;
         
-        // Create and insert iframe
+
         videoContainer.innerHTML = `
             <iframe 
                 src="${embedUrl}" 
@@ -39,7 +38,6 @@ function embedVideo() {
                 allowfullscreen>
             </iframe>`;
         
-        // Show video section and hide input
         videoContainer.style.display = 'block';
         videoSection.style.display = 'block';
         inputSection.style.display = 'none';
@@ -54,11 +52,10 @@ function goBack() {
     const videoContainer = document.getElementById('videoContainer');
     const linkInput = document.getElementById('youtubeLink');
     
-    // Clear the input field
+
     linkInput.value = '';
     
-    // Show input section and hide video
     inputSection.style.display = 'flex';
     videoSection.style.display = 'none';
-    videoContainer.innerHTML = ''; // Clear the video
+    videoContainer.innerHTML = ''; 
 }
