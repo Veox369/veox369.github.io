@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Embedder</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --input-bg: #f0f0f0;
+            --button-bg: #ff0000;
+            --button-hover: #cc0000;
+            --back-button-bg: #666666;
+            --back-button-hover: #444444;
+            --toggle-bg: #f0f0f0;
+            --toggle-circle: #FFD700;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --text-color: #ffffff;
+            --input-bg: #333333;
+            --button-bg: #ff0000;
+            --button-hover: #cc0000;
+            --back-button-bg: #444444;
+            --back-button-hover: #666666;
+            --toggle-bg: #333;
+            --toggle-circle: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle-wrapper {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            border-radius: 30px;
+            background: var(--toggle-bg);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle-wrapper:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .toggle-track {
+            width: 60px;
+            height: 30px;
+            background: #4a4a4a;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .toggle-circle {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: var(--toggle-circle);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        [data-theme="dark"] .toggle-track {
+            background: #666;
+        }
+
+        [data-theme="dark"] .toggle-circle {
+            left: 33px;
+        }
+
+        .toggle-circle i {
+            font-size: 14px;
+            color: #4a4a4a;
+            transition: 0.3s ease-in-out;
+        }
+
+        [data-theme="dark"] .toggle-circle i {
+            color: #666;
+        }
+
+        /* Rest of your existing styles */
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 800px;
+            width: 90%;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            width: 100%;
+            max-width: 500px;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 25px;
+            background-color: var(--button-bg);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background-color: var(--button-hover);
+            transform: scale(1.05);
+        }
+
+        .back-button {
+            background-color: var(--back-button-bg);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .back-button:hover {
+            background-color: var(--back-button-hover);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            display: none;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .input-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-toggle-wrapper" onclick="toggleTheme()">
+        <div class="toggle-track">
+            <div class="toggle-circle">
+                <i class="fas fa-sun"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="input-container" id="inputSection">
+            <input type="text" id="youtubeLink" placeholder="Paste YouTube link here...">
+            <button onclick="embedVideo()">
+                Go <i class="fas fa-play"></i>
+            </button>
+        </div>
+        <div id="videoSection" style="display: none;">
+            <div class="video-container" id="videoContainer"></div>
+            <button class="back-button" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> Back
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const toggleCircle = document.querySelector('.toggle-circle i');
+            
+            if (body.getAttribute('data-theme') === 'dark') {
+                body.removeAttribute('data-theme');
+                toggleCircle.className = 'fas fa-sun';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                toggleCircle.className = 'fas fa-moon';
+            }
+        }
+
+        function embedVideo() {
+            const linkInput = document.getElementById('youtubeLink');
+            const inputSection = document.getElementById('inputSection');
+            const videoSection = document.getElementById('videoSection');
+            const videoContainer = document.getElementById('videoContainer');
+            
+            let videoUrl = linkInput.value;
+            
+            let videoId = '';
+            const urlPattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+            const match = videoUrl.match(urlPattern);
+            
+            if (match && match[1]) {
+                videoId = match[1];
+                const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                
+                videoContainer.innerHTML = `
+                    <iframe 
+                        src="${embedUrl}" 
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        referrerpolicy="strict-origin-when-cross-origin" 
+                        allowfullscreen>
+                    </iframe>`;
+                
+                videoContainer.style.display = 'block';
+                videoSection.style.display = 'block';
+                inputSection.style.display = 'none';
+            } else {
+                alert('Please enter a valid YouTube URL');
+            }
+        }
+
+        function goBack() {
+            const inputSection = document.getElementById('inputSection');
+            const videoSection = document.getElementById('videoSection');
+            const videoContainer = document.getElementById('videoContainer');
+            const linkInput = document.getElementById('youtubeLink');
+            
+            linkInput.value = '';
+            
+            inputSection.style.display = 'flex';
+            videoSection.style.display = 'none';
+            videoContainer.innerHTML = '';
+        }
+    </script>
+</body>
+</html>
