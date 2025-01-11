@@ -1,3 +1,4 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +7,292 @@
     <title>YT 0:59</title>
     <link rel="icon" href="https://www.pngall.com/wp-content/uploads/2/V-Letter-PNG-File-Download-Free.png" type="image/x-icon">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <style>
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --input-bg: #f0f0f0;
+    --button-bg: #ff0000;
+    --button-hover: #cc0000;
+    --back-button-bg: #666666;
+    --back-button-hover: #444444;
+}
+
+[data-theme="dark"] {
+    --bg-color: #18181B;
+    --text-color: #ffffff;
+    --input-bg: #333333;
+    --button-bg: #ff0000;
+    --button-hover: #cc0000;
+    --back-button-bg: #444444;
+    --back-button-hover: #666666;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    max-width: 800px;
+    width: 90%;
+}
+
+.input-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+input {
+    padding: 12px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 25px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    width: 100%;
+    max-width: 500px;
+    outline: none;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 25px;
+    background-color: var(--button-bg);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+button:hover {
+    background-color: var(--button-hover);
+    transform: scale(1.05);
+}
+
+.back-button {
+    background-color: var(--back-button-bg);
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.back-button:hover {
+    background-color: var(--back-button-hover);
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    display: none;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+}
+
+.history-section {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: var(--bg-color);
+    border-radius: 15px;
+    border: 2px solid var(--input-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.history-content {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 15px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--button-bg) var(--input-bg);
+}
+
+.history-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.history-content::-webkit-scrollbar-track {
+    background: var(--input-bg);
+    border-radius: 10px;
+}
+
+.history-content::-webkit-scrollbar-thumb {
+    background: var(--button-bg);
+    border-radius: 10px;
+}
+
+.history-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    gap: 15px;
+    border-bottom: 1px solid var(--input-bg);
+    background-color: var(--bg-color);
+    transition: transform 0.2s ease;
+}
+
+.history-item:last-child {
+    border-bottom: none;
+}
+
+.history-content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+}
+
+.history-content-wrapper:hover {
+    background-color: var(--input-bg);
+    transform: translateX(5px);
+}
+
+.history-thumbnail {
+    width: 140px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.history-title {
+    flex: 1;
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.delete-history {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.delete-history:hover {
+    color: var(--button-bg);
+    background-color: var(--input-bg);
+    transform: scale(1.1);
+}
+
+.history-button {
+    background: var(--input-bg);
+    border: none;
+    color: var(--text-color);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 15px auto;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.2s ease;
+}
+
+.history-button:hover {
+    transform: translateY(-2px);
+    background-color: var(--button-bg);
+    color: white;
+}
+
+.history-count {
+    background-color: var(--button-bg);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.no-history {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-color);
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+@media (max-width: 600px) {
+    .input-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    button {
+        padding: 12px 25px;
+    }
+    
+    .history-content {
+        max-height: 500px;
+    }
+    
+    .history-content-wrapper {
+        flex-direction: column;
+        text-align: center;
+        padding: 12px;
+    }
+
+    .history-thumbnail {
+        width: 180px;
+        height: 100px;
+    }
+
+    .history-title {
+        text-align: center;
+        -webkit-line-clamp: 3;
+    }
+}
+    </style>
 </head>
 <body data-theme="dark">
     <button class="theme-toggle" onclick="toggleTheme()">
@@ -20,6 +306,15 @@
                 Go <i class="fas fa-play"></i>
             </button>
         </div>
+        <button class="history-button" onclick="toggleHistory()">
+            <i class="fas fa-history"></i> History 
+            <span class="history-count">0</span>
+        </button>
+        
+        <div id="historySection" class="history-section" style="display: none;">
+            <div id="historyContent" class="history-content"></div>
+        </div>
+
         <div id="videoSection" style="display: none;">
             <div class="video-container" id="videoContainer"></div>
             <button class="back-button" onclick="goBack()">
@@ -28,6 +323,162 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.querySelector('.theme-toggle i');
+    
+    if (body.getAttribute('data-theme') === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.className = 'fas fa-moon';
+    } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.className = 'fas fa-sun';
+    }
+}
+
+function saveToHistory(videoId, videoUrl) {
+    let history = JSON.parse(localStorage.getItem('videoHistory')) || [];
+    
+    fetch(`https://noembed.com/embed?url=${videoUrl}`)
+        .then(response => response.json())
+        .then(data => {
+            const videoData = {
+                id: videoId,
+                title: data.title,
+                thumbnail: `https://img.youtube.com/vi/${videoId}/default.jpg`,
+                timestamp: new Date().getTime(),
+                url: videoUrl
+            };
+            
+            history = history.filter(item => item.id !== videoId);
+            history.unshift(videoData);
+            history = history.slice(0, 10);
+            
+            localStorage.setItem('videoHistory', JSON.stringify(history));
+            updateHistory();
+        });
+}
+
+function toggleHistory() {
+    const historySection = document.getElementById('historySection');
+    if (historySection.style.display === 'none') {
+        historySection.style.display = 'block';
+        updateHistory();
+    } else {
+        historySection.style.display = 'none';
+    }
+}
+
+function updateHistory() {
+    const history = JSON.parse(localStorage.getItem('videoHistory')) || [];
+    const historyContent = document.getElementById('historyContent');
+    const historyCount = document.querySelector('.history-count');
+    
+    historyCount.textContent = history.length;
+    
+    if (history.length === 0) {
+        historyContent.innerHTML = '<div class="no-history">No videos in history</div>';
+        return;
+    }
+    
+    const historyHtml = history.map(video => `
+        <div class="history-item">
+            <div class="history-content-wrapper" onclick="loadVideoFromHistory('${video.id}')">
+                <img src="${video.thumbnail}" alt="${video.title}" class="history-thumbnail">
+                <div class="history-title">${video.title}</div>
+            </div>
+            <button class="delete-history" onclick="deleteFromHistory('${video.id}')">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `).join('');
+    
+    historyContent.innerHTML = historyHtml;
+}
+
+function loadVideoFromHistory(videoId) {
+    const linkInput = document.getElementById('youtubeLink');
+    const inputSection = document.getElementById('inputSection');
+    const videoSection = document.getElementById('videoSection');
+    const videoContainer = document.getElementById('videoContainer');
+    
+    const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    
+    videoContainer.innerHTML = `
+        <iframe 
+            src="${embedUrl}" 
+            title="YouTube video player" 
+            frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerpolicy="strict-origin-when-cross-origin" 
+            allowfullscreen>
+        </iframe>`;
+    
+    videoContainer.style.display = 'block';
+    videoSection.style.display = 'block';
+    inputSection.style.display = 'none';
+}
+
+function deleteFromHistory(videoId) {
+    let history = JSON.parse(localStorage.getItem('videoHistory')) || [];
+    history = history.filter(item => item.id !== videoId);
+    localStorage.setItem('videoHistory', JSON.stringify(history));
+    updateHistory();
+}
+
+function embedVideo() {
+    const linkInput = document.getElementById('youtubeLink');
+    const inputSection = document.getElementById('inputSection');
+    const videoSection = document.getElementById('videoSection');
+    const videoContainer = document.getElementById('videoContainer');
+    
+    let videoUrl = linkInput.value;
+    
+    let videoId = '';
+    const urlPattern = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = videoUrl.match(urlPattern);
+    
+    if (match && match[1]) {
+        videoId = match[1];
+        const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        
+        videoContainer.innerHTML = `
+            <iframe 
+                src="${embedUrl}" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                referrerpolicy="strict-origin-when-cross-origin" 
+                allowfullscreen>
+            </iframe>`;
+        
+        videoContainer.style.display = 'block';
+        videoSection.style.display = 'block';
+        inputSection.style.display = 'none';
+        
+        saveToHistory(videoId, videoUrl);
+    } else {
+        alert('Please enter a valid YouTube URL');
+    }
+}
+
+function goBack() {
+    const inputSection = document.getElementById('inputSection');
+    const videoSection = document.getElementById('videoSection');
+    const videoContainer = document.getElementById('videoContainer');
+    const linkInput = document.getElementById('youtubeLink');
+    
+    linkInput.value = '';
+    
+    inputSection.style.display = 'flex';
+    videoSection.style.display = 'none';
+    videoContainer.innerHTML = ''; 
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    updateHistory();
+});
+    </script>
 </body>
 </html>
