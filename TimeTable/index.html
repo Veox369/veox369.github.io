@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Time Table</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazir&family=Quicksand:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Vazir', 'Quicksand', sans-serif;
+            letter-spacing: 0.02em;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .input-section {
+            background: #111;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+
+        input, select, button {
+            background: #222;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        button {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        button:hover {
+            background: #2a2a2a;
+            transform: translateY(-1px);
+        }
+
+        .timetable {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .day-column {
+            background: #111;
+            padding: 1.5rem;
+            border-radius: 12px;
+            min-height: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+
+        .day-column h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #eee;
+        }
+
+        .lesson-item {
+            background: #222;
+            padding: 1rem;
+            margin: 0.75rem 0;
+            border-radius: 8px;
+            cursor: move;
+            transition: all 0.2s ease;
+            border-left: 3px solid #fff;
+        }
+
+        .lesson-item:hover {
+            transform: translateX(8px);
+            background: #2a2a2a;
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .lesson-header strong {
+            font-size: 0.95rem;
+            color: #eee;
+        }
+
+        .delete-btn {
+            background: #333;
+            border: none;
+            color: #fff;
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: all 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            opacity: 1;
+            background: #444;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+        }
+
+        .note-editor {
+            background: #111;
+            border-radius: 12px;
+            margin: 2rem auto;
+            width: 95%;
+            max-width: 800px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .editor-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .editor-title {
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .editor-tools {
+            padding: 1rem;
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tool-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #222;
+            border-radius: 8px;
+        }
+
+        .note-content {
+            flex: 1;
+            padding: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            overflow-y: auto;
+            min-height: 300px;
+            border: none;
+            outline: none;
+        }
+
+        .note-content:empty:before {
+            content: attr(data-placeholder);
+            color: #555;
+        }
+
+        .format-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            padding: 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .format-btn:hover {
+            background: #333;
+            transform: scale(1.1);
+        }
+
+        .color-preview {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid #333;
+        }
+
+        .color-picker {
+            position: absolute;
+            opacity: 0;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+
+        .save-status {
+            color: #4CAF50;
+            font-size: 0.9rem;
+            padding: 8px 12px;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .save-status i {
+            color: #4CAF50;
+        }
+
+        .modal-close {
+            background: #333;
+            border: none;
+            color: #fff;
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .timetable {
+                grid-template-columns: 1fr;
+            }
+            
+            input, select {
+                width: 100%;
+                margin: 0.5rem 0;
+            }
+
+            .input-section {
+                padding: 1rem;
+                gap: 0.75rem;
+            }
+
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .editor-tools {
+                gap: 0.5rem;
+                padding: 0.5rem;
+            }
+            
+            .tool-group {
+                padding: 0.5rem;
+            }
+            
+            .note-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="input-section">
+            <input type="text" id="lessonName" placeholder="نام درس">
+            <input type="time" id="lessonTime">
+            <select id="daySelect">
+                <option value="saturday">شنبه</option>
+                <option value="sunday">یکشنبه</option>
+                <option value="monday">دوشنبه</option>
+                <option value="tuesday">سه‌شنبه</option>
+                <option value="wednesday">چهارشنبه</option>
+                <option value="thursday">پنجشنبه</option>
+                <option value="friday">جمعه</option>
+            </select>
+            <button onclick="addLesson()"><i class="fas fa-plus"></i> افزودن درس</button>
+            <button onclick="clearAllLessons()" style="background: #333;"><i class="fas fa-trash-alt"></i> پاک کردن همه</button>
+        </div>
+
+        <div class="timetable" id="timetable"></div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="note-editor">
+            <div class="editor-header">
+                <div class="editor-title">
+                    <i class="fas fa-book-open"></i>
+                    <span id="lesson-title"></span>
+                </div>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="editor-tools">
+                <div class="tool-group">
+                    <button class="format-btn" data-command="bold" title="Bold">
+                        <i class="fas fa-bold"></i>
+                    </button>
+                    <button class="format-btn" data-command="italic" title="Italic">
+                        <i class="fas fa-italic"></i>
+                    </button>
+                    <button class="format-btn" data-command="underline" title="Underline">
+                        <i class="fas fa-underline"></i>
+                    </button>
+                </div>
+
+                <div class="tool-group">
+                    <button class="format-btn" data-command="insertUnorderedList" title="Bullet List">
+                        <i class="fas fa-list-ul"></i>
+                    </button>
+                    <button class="format-btn" data-command="insertOrderedList" title="Numbered List">
+                        <i class="fas fa-list-ol"></i>
+                    </button>
+                </div>
+
+                <div class="tool-group">
+                    <div class="color-preview" style="background: #ffffff" 
+                         onclick="document.getElementById('colorPicker').click()"></div>
+                    <input type="color" id="colorPicker" class="color-picker" 
+                           onchange="changeColor(this.value)">
+                    
+                    <button class="format-btn" onclick="toggleDirection()" title="Text Direction">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                </div>
+
+                <div class="save-status" id="saveStatus">
+                    <i class="fas fa-check-circle"></i>
+                    <span>ذخیره شد</span>
+                </div>
+            </div>
+
+            <div class="note-content" 
+                 id="editor" 
+                 contenteditable="true"
+                 data-placeholder="برای شروع تایپ کنید..."
+                 oninput="handleContentChange()">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let lessons = JSON.parse(localStorage.getItem('lessons')) || [];
+        let currentLesson = null;
+        let editorSettings = JSON.parse(localStorage.getItem('editorSettings')) || {
+            textColor: '#ffffff',
+            direction: 'ltr'
+        };
+
+        function saveLessons() {
+            localStorage.setItem('lessons', JSON.stringify(lessons));
+        }
+
+        function addLesson() {
+            const lesson = {
+                id: Date.now(),
+                name: document.getElementById('lessonName').value,
+                time: document.getElementById('lessonTime').value,
+                day: document.getElementById('daySelect').value,
+                notes: ''
+            };
+            
+            if(!lesson.name || !lesson.time) return;
+            
+            lessons.push(lesson);
+            lessons.sort((a, b) => a.time.localeCompare(b.time));
+            saveLessons();
+            renderTimetable();
+            document.getElementById('lessonName').value = '';
+        }
+
+        function deleteLesson(id) {
+            if(confirm('آیا مطمئنید می خواهید این درس را حذف کنید؟')) {
+                if(currentLesson && currentLesson.id === id) {
+                    closeModal();
+                }
+                lessons = lessons.filter(lesson => lesson.id !== id);
+                saveLessons();
+                renderTimetable();
+            }
+        }
+
+        function clearAllLessons() {
+            if(confirm('آیا مطمئنید می خواهید همه دروس را حذف کنید؟')) {
+                lessons = [];
+                saveLessons();
+                renderTimetable();
+            }
+        }
+
+        function renderTimetable() {
+            const timetable = document.getElementById('timetable');
+            timetable.innerHTML = '';
+            
+            const days = [
+                'saturday', 'sunday', 'monday', 
+                'tuesday', 'wednesday', 'thursday', 'friday'
+            ];
+            
+            days.forEach(day => {
+                const dayLessons = lessons.filter(l => l.day === day);
+                const column = document.createElement('div');
+                column.className = 'day-column';
+                column.innerHTML = `<h3>${document.querySelector(`#daySelect option[value=${day}]`).textContent}</h3>`;
+                
+                dayLessons.forEach(lesson => {
+                    const lessonDiv = document.createElement('div');
+                    lessonDiv.className = 'lesson-item';
+                    lessonDiv.draggable = true;
+                    lessonDiv.innerHTML = `
+                        <div class="lesson-header">
+                            <strong>${lesson.time}</strong>
+                            <button class="delete-btn" onclick="deleteLesson(${lesson.id})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <p>${lesson.name}</p>
+                    `;
+                    
+                    lessonDiv.addEventListener('dragstart', e => {
+                        e.dataTransfer.setData('text/plain', lesson.id);
+                    });
+                    
+                    lessonDiv.addEventListener('click', () => {
+                        currentLesson = lesson;
+                        document.getElementById('lesson-title').textContent = lesson.name;
+                        document.getElementById('editor').innerHTML = lesson.notes;
+                        applyEditorSettings();
+                        document.getElementById('modal').style.display = 'block';
+                    });
+                    
+                    column.appendChild(lessonDiv);
+                });
+                
+                column.addEventListener('dragover', e => e.preventDefault());
+                column.addEventListener('drop', e => {
+                    e.preventDefault();
+                    const lessonId = e.dataTransfer.getData('text/plain');
+                    const lesson = lessons.find(l => l.id == lessonId);
+                    lesson.day = day;
+                    saveLessons();
+                    renderTimetable();
+                });
+                
+                timetable.appendChild(column);
+            });
+        }
+
+        function handleContentChange() {
+            showSaveStatus();
+            clearTimeout(window.saveTimeout);
+            window.saveTimeout = setTimeout(() => {
+                if(currentLesson) {
+                    currentLesson.notes = document.getElementById('editor').innerHTML;
+                    saveLessons();
+                }
+            }, 1000);
+        }
+
+        function showSaveStatus() {
+            const status = document.getElementById('saveStatus');
+            status.style.opacity = '1';
+            setTimeout(() => {
+                status.style.opacity = '0';
+            }, 2000);
+        }
+
+        function changeColor(color) {
+            document.execCommand('foreColor', false, color);
+            editorSettings.textColor = color;
+            document.querySelector('.color-preview').style.background = color;
+            saveEditorSettings();
+        }
+
+        function toggleDirection() {
+            const editor = document.getElementById('editor');
+            editor.classList.toggle('rtl');
+            editorSettings.direction = editor.classList.contains('rtl') ? 'rtl' : 'ltr';
+            saveEditorSettings();
+        }
+
+        function saveEditorSettings() {
+            localStorage.setItem('editorSettings', JSON.stringify(editorSettings));
+        }
+
+        function applyEditorSettings() {
+            const editor = document.getElementById('editor');
+            editor.style.color = editorSettings.textColor;
+            document.querySelector('.color-preview').style.background = editorSettings.textColor;
+            editor.classList.toggle('rtl', editorSettings.direction === 'rtl');
+        }
+
+        function closeModal() {
+            if(currentLesson) {
+                currentLesson.notes = document.getElementById('editor').innerHTML;
+                saveLessons();
+            }
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Initialize button functionality
+        document.querySelectorAll('.format-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const command = button.dataset.command;
+                document.execCommand(command, false, null);
+            });
+        });
+
+        window.onclick = function(e) {
+            if (e.target == document.getElementById('modal')) {
+                closeModal();
+            }
+        };
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            applyEditorSettings();
+            renderTimetable();
+        });
+    </script>
+</body>
+</html>
