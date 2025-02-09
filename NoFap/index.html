@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoFap</title>
+    <link rel="icon" href="https://www.pngall.com/wp-content/uploads/2/V-Letter-PNG-File-Download-Free.png" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f6f6f6 0%, #ffffff 100%);
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #000 0%, #333 100%);
+            border-radius: 24px 24px 0 0;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            margin-bottom: 2rem;
+            color: #1a1a1a;
+            font-weight: 800;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .timer {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .timer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .timer-box {
+            background: white;
+            padding: 0.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .timer-box:hover {
+            transform: translateY(-2px);
+        }
+
+        .timer-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .timer-label {
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .progress-container {
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #000 0%, #333 100%);
+            transition: width 0.5s ease;
+        }
+
+        .progress-label {
+            font-size: 0.9rem;
+            color: #666;
+            text-align: center;
+        }
+
+        .quote-box {
+            background: #f8f8f8;
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .quote-box:hover {
+            transform: translateY(-2px);
+        }
+
+        .quote-text {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+            color: #333;
+        }
+
+        .quote-author {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .checkbox-container:hover {
+            background: #f8f8f8;
+        }
+
+        .checkbox-message {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: #666;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .checkbox-message.show {
+            opacity: 1;
+        }
+
+        .custom-checkbox {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #000;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .custom-checkbox.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .custom-checkbox i {
+            color: white;
+            font-size: 16px;
+            display: none;
+            transition: transform 0.3s ease;
+        }
+
+        .custom-checkbox.checked {
+            background-color: #000;
+        }
+
+        .custom-checkbox.checked i {
+            display: block;
+            transform: scale(1);
+        }
+
+        .reset-button {
+            width: 100%;
+            background: none;
+            border: 2px solid #000;
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .reset-button:hover {
+            background: #000;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 480px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .timer-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .stat-box, .timer-box {
+                padding: 1rem;
+            }
+            
+            .stat-value {
+                font-size: 1.75rem;
+            }
+            
+            .timer-value {
+                font-size: 1.25rem;
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .success-animation {
+            animation: pulse 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Journey to Self-Mastery</h1>
+        
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-value" id="streak-count">0</div>
+                <div class="stat-label">Days Clean</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="best-streak">0</div>
+                <div class="stat-label">Best Streak</div>
+            </div>
+        </div>
+
+        <div class="timer">
+            <div class="timer-grid">
+                <div class="timer-box">
+                    <div class="timer-value" id="days">0</div>
+                    <div class="timer-label">Days</div>
+                </div>
+                <div class="timer-box">
+                    <div class="timer-value" id="hours">0</div>
+                    <div class="timer-label">Hours</div>
+                </div>
+                <div class="timer-box">
+                    <div class="timer-value" id="minutes">0</div>
+                    <div class="timer-label">Minutes</div>
+                </div>
+                <div class="timer-box">
+                    <div class="timer-value" id="seconds">0</div>
+                    <div class="timer-label">Seconds</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-label">Progress to 30 Days: <span id="progress-percentage">0</span>%</div>
+        </div>
+
+        <div class="quote-box">
+            <div class="quote-text" id="quote-text"></div>
+            <div class="quote-author" id="quote-author"></div>
+        </div>
+
+        <div class="checkbox-container">
+            <div class="custom-checkbox">
+                <i class="fas fa-check"></i>
+            </div>
+            <span>I stayed committed today</span>
+            <div class="checkbox-message">You've already checked in today. Come back tomorrow!</div>
+        </div>
+
+        <button class="reset-button">Reset Progress</button>
+    </div>
+
+    <script>
+const quotes = [
+    { text: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson" },
+    { text: "Success is not final, failure is not fatal: it is the courage to continue that counts.", author: "Winston Churchill" },
+    { text: "The future depends on what you do today.", author: "Mahatma Gandhi" },
+    { text: "Don't count the days, make the days count.", author: "Muhammad Ali" },
+    { text: "Fall seven times, stand up eight.", author: "Japanese Proverb" },
+    { text: "Every day is a new beginning.", author: "Anonymous" },
+    { text: "Your potential is limitless.", author: "Anonymous" }
+];
+
+// DOM Elements
+const streakCountElement = document.getElementById('streak-count');
+const bestStreakElement = document.getElementById('best-streak');
+const progressFill = document.getElementById('progress-fill');
+const progressPercentage = document.getElementById('progress-percentage');
+const quoteText = document.getElementById('quote-text');
+const quoteAuthor = document.getElementById('quote-author');
+const checkbox = document.querySelector('.custom-checkbox');
+const checkboxContainer = document.querySelector('.checkbox-container');
+const checkboxMessage = document.querySelector('.checkbox-message');
+const resetButton = document.querySelector('.reset-button');
+const daysElement = document.getElementById('days');
+const hoursElement = document.getElementById('hours');
+const minutesElement = document.getElementById('minutes');
+const secondsElement = document.getElementById('seconds');
+
+// Load data from localStorage
+let streak = parseInt(localStorage.getItem('streak')) || 0;
+let bestStreak = parseInt(localStorage.getItem('bestStreak')) || 0;
+let lastChecked = localStorage.getItem('lastChecked');
+let startDate = new Date(localStorage.getItem('startDate') || Date.now());
+
+// Initialize display
+updateDisplay();
+updateQuote();
+startTimer();
+
+function showMessage(duration = 3000) {
+    checkboxMessage.classList.add('show');
+    setTimeout(() => {
+        checkboxMessage.classList.remove('show');
+    }, duration);
+}
+
+function updateDisplay() {
+    streakCountElement.textContent = streak;
+    bestStreakElement.textContent = bestStreak;
+    
+    const progress = (streak / 30) * 100;
+    progressFill.style.width = `${Math.min(progress, 100)}%`;
+    progressPercentage.textContent = Math.min(Math.round(progress), 100);
+
+    // Check if it's a new day
+    const today = new Date().toDateString();
+    if (lastChecked !== today) {
+        checkbox.classList.remove('checked');
+        checkbox.classList.remove('disabled');
+    } else {
+        checkbox.classList.add('checked');
+        checkbox.classList.add('disabled');
+    }
+}
+
+function updateQuote() {
+    const today = new Date().toDateString();
+    const savedQuoteDate = localStorage.getItem('quoteDate');
+    
+    if (today !== savedQuoteDate) {
+        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+        quoteText.textContent = randomQuote.text;
+        quoteAuthor.textContent = `- ${randomQuote.author}`;
+        localStorage.setItem('quoteDate', today);
+        localStorage.setItem('currentQuote', JSON.stringify(randomQuote));
+    } else {
+        const savedQuote = JSON.parse(localStorage.getItem('currentQuote'));
+        quoteText.textContent = savedQuote.text;
+        quoteAuthor.textContent = `- ${savedQuote.author}`;
+    }
+}
+
+function startTimer() {
+    function updateTimer() {
+        const now = new Date();
+        const diff = now - startDate;
+        
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        daysElement.textContent = days;
+        hoursElement.textContent = hours;
+        minutesElement.textContent = minutes;
+        secondsElement.textContent = seconds;
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+}
+
+// Checkbox event listener
+checkbox.addEventListener('click', () => {
+    const today = new Date().toDateString();
+    
+    if (lastChecked === today) {
+        checkbox.classList.add('disabled');
+        showMessage();
+        return;
+    }
+    
+    checkbox.classList.toggle('checked');
+    checkboxContainer.classList.add('success-animation');
+    setTimeout(() => {
+        checkboxContainer.classList.remove('success-animation');
+    }, 500);
+    
+    if (checkbox.classList.contains('checked')) {
+        streak++;
+        if (streak > bestStreak) {
+            bestStreak = streak;
+            localStorage.setItem('bestStreak', bestStreak);
+        }
+        lastChecked = today;
+    } else {
+        streak--;
+        lastChecked = null;
+    }
+    
+    localStorage.setItem('streak', streak);
+    localStorage.setItem('lastChecked', lastChecked);
+    updateDisplay();
+});
+
+// Reset button event listener
+resetButton.addEventListener('click', () => {
+    if (confirm('Are you sure you want to reset your progress? This cannot be undone.')) {
+        streak = 0;
+        lastChecked = null;
+        startDate = new Date();
+        
+        localStorage.setItem('streak', streak);
+        localStorage.setItem('lastChecked', lastChecked);
+        localStorage.setItem('startDate', startDate);
+        
+        checkbox.classList.remove('checked');
+        checkbox.classList.remove('disabled');
+        updateDisplay();
+        
+        // Reset timer
+        startTimer();
+    }
+});
+
+    </script>
+</body>
+</html>
